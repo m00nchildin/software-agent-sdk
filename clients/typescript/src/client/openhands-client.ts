@@ -16,6 +16,7 @@ import { SettingsClient } from './settings-client';
 import { SharedClient } from './shared-client';
 import { SkillsClient } from './skills-client';
 import { SubAgentsClient } from './sub-agents-client';
+import { TaskBoardClient } from './task-board-client';
 import { ToolClient } from './tool-client';
 import { VSCodeClient } from './vscode-client';
 import { WorkspacesClient } from './workspaces-client';
@@ -133,6 +134,7 @@ export class AgentServerClient extends OpenHandsClient {
   readonly metaProfiles: MetaProfilesClient;
   readonly skills: SkillsClient;
   readonly subAgents: SubAgentsClient;
+  readonly taskBoards: TaskBoardClient;
   readonly hooks: HooksClient;
   readonly git: GitClient;
   readonly mcp: MCPClient;
@@ -169,6 +171,7 @@ export class AgentServerClient extends OpenHandsClient {
     this.metaProfiles = new MetaProfilesClient(clientOptions);
     this.skills = new SkillsClient(clientOptions);
     this.subAgents = new SubAgentsClient(clientOptions);
+    this.taskBoards = new TaskBoardClient(clientOptions);
     this.hooks = new HooksClient(clientOptions);
     this.git = new GitClient(clientOptions);
     this.mcp = new MCPClient(clientOptions);
@@ -211,6 +214,7 @@ export class AgentServerClient extends OpenHandsClient {
   }
 
   override close(): void {
+    this.taskBoards.close();
     this.client.close();
   }
 }

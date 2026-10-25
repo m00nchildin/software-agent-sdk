@@ -22,6 +22,16 @@ export { MetaProfilesClient } from './client/meta-profiles-client';
 export { SettingsClient } from './client/settings-client';
 export { SkillsClient } from './client/skills-client';
 export { SubAgentsClient } from './client/sub-agents-client';
+export { TaskBoardClient } from './client/task-board-client';
+export type {
+  BoardTask,
+  BoardTaskInput,
+  BoardTaskStatus,
+  TaskBlocker,
+  TaskBoard,
+  TaskBoardClientOptions,
+  TaskBoardConflict,
+} from './client/task-board-client';
 export { PluginsClient } from './client/plugins-client';
 export { ToolClient } from './client/tool-client';
 export { VSCodeClient } from './client/vscode-client';

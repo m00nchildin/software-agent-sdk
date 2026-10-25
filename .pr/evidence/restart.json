@@ -1,0 +1,64 @@
+{
+  "transport": "real HTTP; no browser or WebSocket; no model calls",
+  "restart": "server process killed and restarted with same persistence",
+  "before_restart": {
+    "root_conversation_id": "21855b3c-8e74-4dcc-835f-041473ab7e90",
+    "tasks": [
+      {
+        "title": "live completion",
+        "owner": "5fa868be-906c-429d-9cb9-b4de9e4205c8",
+        "role": "engineer",
+        "status": "done",
+        "depends_on": [],
+        "parallel_group": null,
+        "blocked": null,
+        "completion_commit": "abcdef1234",
+        "id": "82a5605a-51d5-4dbb-bd44-71096d109e3b",
+        "version": 2
+      },
+      {
+        "title": "live claim",
+        "owner": "5fa868be-906c-429d-9cb9-b4de9e4205c8",
+        "role": "engineer",
+        "status": "in_progress",
+        "depends_on": [],
+        "parallel_group": null,
+        "blocked": null,
+        "completion_commit": null,
+        "id": "0a70a372-2531-401b-9c48-771152c052bd",
+        "version": 1
+      }
+    ]
+  },
+  "after_restart": {
+    "root_conversation_id": "21855b3c-8e74-4dcc-835f-041473ab7e90",
+    "tasks": [
+      {
+        "title": "live completion",
+        "owner": "5fa868be-906c-429d-9cb9-b4de9e4205c8",
+        "role": "engineer",
+        "status": "done",
+        "depends_on": [],
+        "parallel_group": null,
+        "blocked": null,
+        "completion_commit": "abcdef1234",
+        "id": "82a5605a-51d5-4dbb-bd44-71096d109e3b",
+        "version": 2
+      },
+      {
+        "title": "live claim",
+        "owner": "5fa868be-906c-429d-9cb9-b4de9e4205c8",
+        "role": "engineer",
+        "status": "in_progress",
+        "depends_on": [],
+        "parallel_group": null,
+        "blocked": null,
+        "completion_commit": null,
+        "id": "0a70a372-2531-401b-9c48-771152c052bd",
+        "version": 1
+      }
+    ]
+  },
+  "out_of_tree_read": 403,
+  "former_member_after_root_deletion": 404
+}

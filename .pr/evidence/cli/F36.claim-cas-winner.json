@@ -1,0 +1,34 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/conversations/f78bfd68-6971-4b17-b8a7-3b9c617ef0e9/task-board/tasks/91baaeb0-6d8a-4cf9-947d-b3af2419589e/claim",
+    "query": [],
+    "auth": "header",
+    "body": {
+      "expected_version": 0,
+      "role": "engineer"
+    },
+    "files": []
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-length": "248",
+      "content-type": "application/json"
+    },
+    "body": {
+      "title": "QA shared work",
+      "owner": "f78bfd68-6971-4b17-b8a7-3b9c617ef0e9",
+      "role": "engineer",
+      "status": "in_progress",
+      "depends_on": [],
+      "parallel_group": null,
+      "blocked": null,
+      "completion_commit": null,
+      "id": "91baaeb0-6d8a-4cf9-947d-b3af2419589e",
+      "version": 1
+    },
+    "truncated": false
+  },
+  "elapsed_ms": 116
+}

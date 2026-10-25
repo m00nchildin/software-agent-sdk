@@ -39,6 +39,7 @@ from openhands.agent_server.models import (
     UpdateSecretsRequest,
 )
 from openhands.agent_server.persistence import PersistedSettings, get_settings_store
+from openhands.agent_server.task_board import TaskBoardStore
 from openhands.agent_server.utils import safe_rmtree
 from openhands.sdk.conversation.request import ConversationContainerOptions
 from openhands.sdk.launch import AgentLaunchError, LaunchStoreError, ResolvedLaunch
@@ -326,7 +327,10 @@ async def delete_conversation(conversation_id: UUID, request: Request) -> Respon
         await asyncio.to_thread(
             safe_rmtree, registry.provisioning.runtime_dir(conversation_id)
         )
-        await asyncio.to_thread(safe_rmtree, registry.conversation_dir(conversation_id))
+        await asyncio.to_thread(
+            TaskBoardStore(registry.config.conversations_path).remove_conversation,
+            conversation_id,
+        )
         await get_conversation_service(request).refresh_persisted_conversation(
             conversation_id
         )

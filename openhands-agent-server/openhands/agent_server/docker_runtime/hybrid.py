@@ -121,7 +121,9 @@ class RuntimeDispatchMiddleware:
             ) == "docker"
         elif match := _CONVERSATION_PATH.match(path):
             # GET of the conversation itself is the shared catalog record.
-            catalog_read = match[2] is None and method in ("GET", "HEAD")
+            catalog_read = (match[2] is None and method in ("GET", "HEAD")) or (
+                (match[2] or "").split("/")[1:2] == ["task-board"]
+            )
             conversation_id = _conversation_id(match[1])
             to_docker = (
                 conversation_id is not None

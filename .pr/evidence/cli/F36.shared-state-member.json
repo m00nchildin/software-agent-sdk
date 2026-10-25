@@ -1,0 +1,36 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/conversations/f78bfd68-6971-4b17-b8a7-3b9c617ef0e9/task-board",
+    "query": [],
+    "auth": "header",
+    "body": null,
+    "files": []
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-length": "275",
+      "content-type": "application/json"
+    },
+    "body": {
+      "root_conversation_id": "491e03ea-0714-4308-a0cd-d7edf6fd01d7",
+      "tasks": [
+        {
+          "title": "QA shared work",
+          "owner": null,
+          "role": null,
+          "status": "todo",
+          "depends_on": [],
+          "parallel_group": null,
+          "blocked": null,
+          "completion_commit": null,
+          "id": "91baaeb0-6d8a-4cf9-947d-b3af2419589e",
+          "version": 0
+        }
+      ]
+    },
+    "truncated": false
+  },
+  "elapsed_ms": 158
+}

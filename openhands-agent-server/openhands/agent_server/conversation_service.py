@@ -50,6 +50,7 @@ from openhands.agent_server.models import (
 from openhands.agent_server.persistence import FileSecretsStore
 from openhands.agent_server.pub_sub import Subscriber
 from openhands.agent_server.server_details_router import update_last_execution_time
+from openhands.agent_server.task_board import TaskBoardStore
 from openhands.agent_server.telemetry import (
     ConversationTelemetryContext,
     DiagnosticEventFactory,
@@ -1857,9 +1858,9 @@ class ConversationService:
             # Safely remove only the conversation directory (workspace is preserved).
             # This operation may fail due to permission issues, but we don't want that
             # to prevent the conversation from being marked as deleted.
-            safe_rmtree(
-                event_service.conversation_dir,
-                f"conversation directory for {conversation_id}",
+            await asyncio.to_thread(
+                TaskBoardStore(self.conversations_dir).remove_conversation,
+                conversation_id,
             )
             worktree_dir = self._worktree_dir(event_service.stored)
             # Forks share their source's worktree; the last one deleted removes it.

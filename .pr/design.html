@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Server-owned shared team task board — Issue #6132</title>
+<style>
+body{font:16px/1.6 system-ui,sans-serif;background:#f4f6f9;color:#16263c;margin:0}
+main{max-width:1080px;margin:auto;padding:44px 28px}h1{font-size:36px;line-height:1.2;max-width:800px}
+h2{margin-top:38px;font-size:24px}p{max-width:900px}.tag{color:#24635f;font-weight:700}
+section,.card{background:white;border:1px solid #d5dee8;border-radius:12px;padding:22px;margin:18px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}code,pre{font-family:Consolas,monospace}
+pre{background:#edf2f7;padding:18px;border-radius:8px;overflow:auto;font-size:14px}
+table{width:100%;border-collapse:collapse}td,th{padding:12px;text-align:left;border-bottom:1px solid #d5dee8}
+.flow{display:flex;gap:12px;flex-wrap:wrap}.flow b{background:#e9f4f1;border:1px solid #c2d7d2;padding:12px;border-radius:8px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}h1{font-size:28px}main{padding:24px 16px}}
+</style><main>
+<p class="tag">Issue #6132 · Additive API · Draft for review</p>
+<h1>One durable board for a conversation tree</h1>
+<p>Agents can read who owns work, claim it atomically, and record completion without
+asking another agent or keeping a browser connected. The root conversation owns
+the state and its deletion removes the board.</p>
+<div class="grid">
+<section><h2>Before</h2><p>TaskTracker plans belong to one conversation.
+There is no shared server board or atomic ownership operation. Canvas's proposed
+branch snapshot depends on a connected client.</p></section>
+<section><h2>After</h2><p>Authenticated REST operations and an opt-in agent tool resolve
+the existing parent links. Members share a persisted board with versioned writes,
+dependency validation and one winner for a competing claim.</p></section>
+</div>
+<h2>Request ownership and persistence</h2>
+<div class="flow"><b>Conversation-bound tool / typed client</b><b>Authenticated REST</b>
+<b>Read parent links under file lock</b><b>Validate + compare revision</b><b>fsync + atomic replace</b></div>
+<section><p><code>task_board.py: TaskBoardStore</code> reads only identity and parent
+metadata. It does not hydrate an agent, require a runtime lease, contact a model,
+or attach a WebSocket. All blocking file operations execute off the event loop.</p>
+<p>The authoritative board lives at <code>&lt;conversations&gt;/&lt;root hex&gt;/task_board.json</code>.
+<code>.task-board.lock</code> lives outside conversation directories, so deleting a
+root cannot replace a lock while another process waits. The first implementation
+serializes all board operations with one lock; this favors a small, auditable
+transaction boundary over a new database or registry.</p></section>
+<h2>Additive public interface</h2>
+<p>Base: <code>/api/conversations/{member_id}/task-board</code>. Optional
+<code>root_conversation_id</code> must match the resolved tree.</p>
+<table><tr><th>Operation</th><th>Input</th><th>Result</th></tr>
+<tr><td>GET</td><td>Member identity</td><td>Root id and every task</td></tr>
+<tr><td>POST /tasks</td><td>Task contents</td><td>Stable UUID, version 0</td></tr>
+<tr><td>PUT /tasks/{id}</td><td>Complete contents + expected_version</td><td>New revision, or 409 + current task</td></tr>
+<tr><td>POST /tasks/{id}/claim</td><td>expected_version + role</td><td>Caller becomes owner, or 409 + current task</td></tr></table>
+<pre>{
+  "id": "&lt;stable task UUID&gt;", "version": 1,
+  "title": "Implement storage", "owner": "&lt;conversation UUID&gt;", "role": "engineer",
+  "status": "in_progress", "depends_on": [], "parallel_group": null,
+  "blocked": null, "completion_commit": null
+}</pre>
+<h2>The claim transaction</h2>
+<pre>Both members read task version 0, owner=null, status=todo.
+Member A holds the lock: version matches; dependencies are done.
+  → persist owner=A, status=in_progress, version=1; release lock.
+Member B acquires the lock and re-reads version 1.
+  → 409 {detail: "Task version is stale", current_task: {owner: A, version: 1, …}}.
+Repeating A's claim also fails; it does not create another claim.</pre>
+<h2>Lifecycle and validation</h2>
+<ul><li>Statuses: todo / in_progress / done, reusing TaskTracker normalization, plus blocked.
+The tracker is unchanged and doing remains invalid.</li>
+<li>Owner and blocking by are conversation UUIDs in the same tree. A role alone is rejected.</li>
+<li>Unknown and cyclic dependencies are rejected. Unfinished dependencies prevent claims.</li>
+<li>Blocked requires reason + by; other states clear that payload. Done requires a completion commit.</li>
+<li>Updates use CAS too. Ownership transfer requires release to todo, then a new claim.</li>
+<li>Root removal uses the transaction lock; late member requests fail 404. Removing another member retains the board.</li>
+<li>Rejected input values are omitted from validation errors. Board models forbid extra fields.
+No credential fields or PR references are introduced.</li></ul>
+<h2>Compatibility and boundaries</h2>
+<p>Existing conversation, settings, event, TaskTracker and REST contracts remain unchanged.
+The tool is opt-in. REST operations are exported in OpenAPI; TypeScript exposes
+<code>TaskBoardClient</code> and <code>AgentServerClient.taskBoards</code>.
+The existing generated TypeScript contract remains tied to its published release pin.</p>
+<p>The session key retains server-wide authority. Member ids are a tree-scope boundary,
+not new agent authentication; trusted hosts supply them and the tool binds its own id.</p>
+<p>Outer Docker/hybrid REST calls stay on the catalog. Isolated runtime containers mount
+only their own conversation directory. Their agent tools require a separate narrowly
+scoped bridge to access an outer multi-runtime tree. This proposal preserves that
+isolation and does not forward outer credentials into containers.</p>
+<p>No mailbox, queue, scheduler, Canvas renderer, branch snapshot, git action or PR action is added.</p>
+<h2>Review evidence</h2>
+<p>Focused tests cover HTTP and cross-process competing claims, duplicate claims,
+dependencies, blocked/completed transitions, scope/auth rejection, invalid and corrupt
+state, failed writes, deletion races, persistence, and root ownership. A real HTTP
+test kills and restarts the server with the same storage and exercises the actual
+agent tool. See the PR validation notes for executed results and environment limits.</p>
+</main></html>

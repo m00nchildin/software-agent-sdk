@@ -1,0 +1,38 @@
+{
+  "request": {
+    "method": "PUT",
+    "path": "/api/conversations/f78bfd68-6971-4b17-b8a7-3b9c617ef0e9/task-board/tasks/91baaeb0-6d8a-4cf9-947d-b3af2419589e",
+    "query": [],
+    "auth": "header",
+    "body": {
+      "title": "QA shared work",
+      "owner": "f78bfd68-6971-4b17-b8a7-3b9c617ef0e9",
+      "role": "engineer",
+      "status": "done",
+      "completion_commit": "abcdef1234",
+      "expected_version": 1
+    },
+    "files": []
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-length": "249",
+      "content-type": "application/json"
+    },
+    "body": {
+      "title": "QA shared work",
+      "owner": "f78bfd68-6971-4b17-b8a7-3b9c617ef0e9",
+      "role": "engineer",
+      "status": "done",
+      "depends_on": [],
+      "parallel_group": null,
+      "blocked": null,
+      "completion_commit": "abcdef1234",
+      "id": "91baaeb0-6d8a-4cf9-947d-b3af2419589e",
+      "version": 2
+    },
+    "truncated": false
+  },
+  "elapsed_ms": 138
+}

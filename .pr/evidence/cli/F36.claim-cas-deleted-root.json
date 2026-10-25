@@ -1,0 +1,22 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/conversations/f78bfd68-6971-4b17-b8a7-3b9c617ef0e9/task-board",
+    "query": [],
+    "auth": "header",
+    "body": null,
+    "files": []
+  },
+  "response": {
+    "status": 404,
+    "headers": {
+      "content-length": "40",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Conversation tree not found"
+    },
+    "truncated": false
+  },
+  "elapsed_ms": 116
+}

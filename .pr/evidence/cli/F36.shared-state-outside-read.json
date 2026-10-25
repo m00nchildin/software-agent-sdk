@@ -1,0 +1,27 @@
+{
+  "request": {
+    "method": "GET",
+    "path": "/api/conversations/bce0b0fe-45d4-465d-b0a0-42ab6d74c9d6/task-board",
+    "query": [
+      [
+        "root_conversation_id",
+        "491e03ea-0714-4308-a0cd-d7edf6fd01d7"
+      ]
+    ],
+    "auth": "header",
+    "body": null,
+    "files": []
+  },
+  "response": {
+    "status": 403,
+    "headers": {
+      "content-length": "53",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Conversation is outside the board's tree"
+    },
+    "truncated": false
+  },
+  "elapsed_ms": 124
+}

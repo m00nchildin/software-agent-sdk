@@ -3083,9 +3083,7 @@ class TestConversationServiceDeleteConversation:
         conversation_service._event_services[conversation_id] = mock_service
 
         # Mock the directory removal to avoid actual filesystem operations
-        with patch(
-            "openhands.agent_server.conversation_service.safe_rmtree"
-        ) as mock_rmtree:
+        with patch("openhands.agent_server.task_board.safe_rmtree") as mock_rmtree:
             mock_rmtree.return_value = True
 
             result = await conversation_service.delete_conversation(conversation_id)
@@ -3099,8 +3097,7 @@ class TestConversationServiceDeleteConversation:
             # Verify directories were removed
             assert mock_rmtree.call_count == 1
             mock_rmtree.assert_any_call(
-                "/tmp/test_conversation",
-                "conversation directory for " + str(conversation_id),
+                conversation_service.conversations_dir / conversation_id.hex
             )
 
     @pytest.mark.asyncio
@@ -3133,9 +3130,7 @@ class TestConversationServiceDeleteConversation:
             conversation_service, "_notify_conversation_webhooks", new=AsyncMock()
         ) as mock_notify:
             # Mock the directory removal
-            with patch(
-                "openhands.agent_server.conversation_service.safe_rmtree"
-            ) as mock_rmtree:
+            with patch("openhands.agent_server.task_board.safe_rmtree") as mock_rmtree:
                 mock_rmtree.return_value = True
 
                 result = await conversation_service.delete_conversation(conversation_id)
@@ -3187,9 +3182,7 @@ class TestConversationServiceDeleteConversation:
         conversation_service._event_services[conversation_id] = mock_service
 
         # Mock the directory removal
-        with patch(
-            "openhands.agent_server.conversation_service.safe_rmtree"
-        ) as mock_rmtree:
+        with patch("openhands.agent_server.task_board.safe_rmtree") as mock_rmtree:
             mock_rmtree.return_value = True
 
             result = await conversation_service.delete_conversation(conversation_id)
@@ -3237,9 +3230,7 @@ class TestConversationServiceDeleteConversation:
         conversation_service._event_services[conversation_id] = mock_service
 
         # Mock the directory removal
-        with patch(
-            "openhands.agent_server.conversation_service.safe_rmtree"
-        ) as mock_rmtree:
+        with patch("openhands.agent_server.task_board.safe_rmtree") as mock_rmtree:
             mock_rmtree.return_value = True
 
             result = await conversation_service.delete_conversation(conversation_id)
@@ -3281,9 +3272,7 @@ class TestConversationServiceDeleteConversation:
         }
 
         with (
-            patch(
-                "openhands.agent_server.conversation_service.safe_rmtree"
-            ) as mock_rmtree,
+            patch("openhands.agent_server.task_board.safe_rmtree") as mock_rmtree,
             pytest.raises(CredentialSyncError, match="broker unavailable"),
         ):
             await conversation_service.delete_conversation(conversation_id)
@@ -3328,9 +3317,7 @@ class TestConversationServiceDeleteConversation:
         conversation_service._event_services[conversation_id] = mock_service
 
         # Mock directory removal to fail (simulating permission errors)
-        with patch(
-            "openhands.agent_server.conversation_service.safe_rmtree"
-        ) as mock_rmtree:
+        with patch("openhands.agent_server.task_board.safe_rmtree") as mock_rmtree:
             mock_rmtree.return_value = False  # Simulate removal failure
 
             result = await conversation_service.delete_conversation(conversation_id)

@@ -1,0 +1,39 @@
+{
+  "result": "pass",
+  "transport": "built TypeScript client over real HTTP",
+  "competing_claims": {
+    "winners": 1,
+    "losers": 1
+  },
+  "completion": {
+    "title": "QA typed client",
+    "owner": "dd48ee95-880a-46e1-9cc8-656c62aa68c2",
+    "role": "engineer",
+    "status": "done",
+    "depends_on": [],
+    "parallel_group": null,
+    "blocked": null,
+    "completion_commit": "abcdef1234",
+    "id": "55754522-2628-4de9-bc5f-3f9d7590720e",
+    "version": 2
+  },
+  "readback": {
+    "root_conversation_id": "c6d8035c-b5d8-470b-adbb-5fafcd59f9cd",
+    "tasks": [
+      {
+        "title": "QA typed client",
+        "owner": "dd48ee95-880a-46e1-9cc8-656c62aa68c2",
+        "role": "engineer",
+        "status": "done",
+        "depends_on": [],
+        "parallel_group": null,
+        "blocked": null,
+        "completion_commit": "abcdef1234",
+        "id": "55754522-2628-4de9-bc5f-3f9d7590720e",
+        "version": 2
+      }
+    ]
+  },
+  "outside_tree": 403,
+  "after_root_delete": 404
+}

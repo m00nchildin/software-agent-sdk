@@ -92,6 +92,7 @@ from openhands.agent_server.server_details_router import (
 from openhands.agent_server.settings_router import settings_router
 from openhands.agent_server.skills_router import skills_router
 from openhands.agent_server.sub_agents_router import sub_agents_router
+from openhands.agent_server.task_board_router import task_board_router
 from openhands.agent_server.telemetry import (
     build_telemetry_sink,
     emit_server_started,
@@ -586,6 +587,7 @@ def _add_api_routes(app: FastAPI) -> None:
     # Collection routes must precede runtime catch-alls such as
     # ``/conversations/{conversation_id}``.
     api_router.include_router(conversation_catalog_router)
+    api_router.include_router(task_board_router)
     conversation_registry.add_execution_routes(api_router)
     api_router.include_router(conversation_router)
     api_router.include_router(credential_binding_router)

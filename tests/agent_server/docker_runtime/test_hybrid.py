@@ -86,6 +86,24 @@ async def test_dispatch_routes_conversations_by_runtime(config):
     assert seen["path"] == f"/api/_docker/conversations/{docker_id}"
 
 
+@pytest.mark.parametrize(
+    "method,suffix",
+    [
+        ("GET", ""),
+        ("POST", "/tasks"),
+        ("PUT", "/tasks/task-id"),
+        ("POST", "/tasks/task-id/claim"),
+    ],
+)
+async def test_shared_board_stays_on_catalog_for_docker_members(config, method, suffix):
+    registry = HybridConversationRegistry(config)
+    member = uuid4()
+    registry.provisioning.create(member)
+    path = f"/api/conversations/{member}/task-board{suffix}"
+    seen = await _dispatch(registry, {"type": "http", "method": method, "path": path})
+    assert seen["path"] == path
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "uuid_format",

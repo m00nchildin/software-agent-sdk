@@ -8,6 +8,7 @@ from pydantic import BaseModel
 # Registered only in the agent-server: the tool needs a server to create the
 # child on, so it is deliberately absent from get_default_tools().
 import openhands.tools.child_conversation  # noqa: E402, F401
+import openhands.tools.task_board  # noqa: E402, F401
 from openhands.agent_server.config import Config
 from openhands.agent_server.launch import (
     can_probe_tools,
